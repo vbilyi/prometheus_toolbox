@@ -15,7 +15,8 @@ setup(
     zip_safe=False,
     platforms='any',
     install_requires=[
-        'prometheus-client>=0.3.1'
+        'prometheus-client>=0.3.1',
+        'Django>=1.8'
     ],
     classifiers=[
         'Intended Audience :: Developers',
