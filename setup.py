@@ -1,8 +1,8 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name='Prometheus-Toolbox',
-    version='0.0.1',
+    version='0.0.2',
     url='https://github.com/vbilyi/prometheus_toolbox',
     license='MIT',
     author='Vitaly Bilyi',
@@ -11,7 +11,7 @@ setup(
     maintainer_email='stbarratt@gmail.com',
     description='Prometheus toolbox for python',
     long_description=__doc__,
-    packages=['prometheus_toolbox'],
+    packages=find_packages(),
     zip_safe=False,
     platforms='any',
     install_requires=[

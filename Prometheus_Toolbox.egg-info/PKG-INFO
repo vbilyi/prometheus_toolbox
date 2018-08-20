@@ -1,0 +1,28 @@
+Metadata-Version: 1.2
+Name: Prometheus-Toolbox
+Version: 0.0.2
+Summary: Prometheus toolbox for python
+Home-page: https://github.com/vbilyi/prometheus_toolbox
+Author: Vitaly Bilyi
+Author-email: vitalybilyi@gmail.com
+Maintainer: Vitaly Bilyi
+Maintainer-email: stbarratt@gmail.com
+License: MIT
+Description: UNKNOWN
+Keywords: prometheus toolbox
+Platform: any
+Classifier: Intended Audience :: Developers
+Classifier: Development Status :: 3 - Alpha
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Environment :: Web Environment
+Classifier: Topic :: System :: Monitoring
+Classifier: Topic :: Internet :: WWW/HTTP :: Dynamic Content
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.3
+Classifier: Programming Language :: Python :: 3.4
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
