@@ -1,2 +1,0 @@
-from prometheus_toolbox.middleware.generics.django.PrometheusAfterMiddleware import PrometheusAfterMiddleware
-from prometheus_toolbox.middleware.generics.django.urls import urlpatterns

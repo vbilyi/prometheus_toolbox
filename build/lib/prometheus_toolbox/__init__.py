@@ -1,3 +1,0 @@
-import prometheus_toolbox.middleware
-import prometheus_toolbox.metrics
-
