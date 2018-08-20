@@ -42,3 +42,8 @@ EXCEPTIONS_BY_PATH = Counter(
     with_prefix('http_exceptions_total_by_view'),
     'Count of exceptions by path.',
     ['path'])
+
+EXCEPTIONS_BY_TYPE = Counter(
+    with_prefix('http_exceptions_total_by_type'),
+    'Count of exceptions by object type.',
+    ['type'])

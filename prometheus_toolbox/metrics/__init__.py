@@ -7,5 +7,6 @@ from prometheus_toolbox.metrics.metrics import (
     RESPONSES_BODY_BYTES,
     RESPONSES_BY_STATUS,
     RESPONSES_TOTAL,
-    EXCEPTIONS_BY_PATH
+    EXCEPTIONS_BY_PATH,
+    EXCEPTIONS_BY_TYPE
 )
