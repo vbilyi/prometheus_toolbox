@@ -33,10 +33,10 @@ RESPONSES_BODY_BYTES = Histogram(
     'Histogram of responses by body size.',
     buckets=powers_of(2, 30))
 
-RESPONSES_BY_STATUS = Counter(
-    with_prefix('http_responses_total_by_status'),
+RESPONSES_BY_PATH_STATUS = Counter(
+    with_prefix('http_responses_by_path_status'),
     'Count of responses by status.',
-    ['status'])
+    ['path', 'status'])
 
 EXCEPTIONS_BY_PATH = Counter(
     with_prefix('http_exceptions_total_by_view'),

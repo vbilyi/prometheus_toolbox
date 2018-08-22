@@ -7,7 +7,7 @@ from prometheus_toolbox.metrics import (
     REQUESTS_LATENCY_UNKNOWN,
     REQUESTS_TOTAL,
     RESPONSES_BODY_BYTES,
-    RESPONSES_BY_STATUS,
+    RESPONSES_BY_PATH_STATUS,
     RESPONSES_TOTAL,
     EXCEPTIONS_BY_PATH,
     EXCEPTIONS_BY_TYPE
@@ -52,7 +52,11 @@ class PrometheusAfterMiddleware(BaseMonitoringMiddleware, MiddlewareMixin):
 
     def process_response(self, request, response):
         RESPONSES_TOTAL.inc()
-        RESPONSES_BY_STATUS.labels(str(response.status_code)).inc()
+        RESPONSES_BY_PATH_STATUS\
+            .labels(
+                path=self._get_path(request),
+                status=str(response.status_code)
+            ).inc()
         if hasattr(response, 'content'):
             RESPONSES_BODY_BYTES.observe(len(response.content))
         if hasattr(request, 'prometheus_middleware_event'):
