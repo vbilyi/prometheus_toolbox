@@ -18,10 +18,10 @@ REQUESTS_LATENCY_UNKNOWN = Counter(
     with_prefix('http_requests_unknown_latency'),
     'Count of requests for which the latency was unknown')
 
-REQUESTS_BY_PATH_METHOD = Counter(
+REQUESTS_BY_METHOD = Counter(
     with_prefix('http_requests_total_by_path_method'),
     'Count of requests by path, method.',
-    ['path', 'method'])
+    ['method'])
 
 REQUESTS_BODY_BYTES = Histogram(
     with_prefix('http_requests_body_total_bytes'),

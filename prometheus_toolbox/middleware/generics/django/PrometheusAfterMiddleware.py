@@ -2,7 +2,7 @@ from prometheus_toolbox.metrics.utils import time, time_since
 from prometheus_toolbox.middleware.base import BaseMonitoringMiddleware
 from prometheus_toolbox.metrics import (
     REQUESTS_BODY_BYTES,
-    REQUESTS_BY_PATH_METHOD,
+    REQUESTS_BY_METHOD,
     REQUESTS_LATENCY_BY_PATH_METHOD,
     REQUESTS_LATENCY_UNKNOWN,
     REQUESTS_TOTAL,
@@ -45,8 +45,7 @@ class PrometheusAfterMiddleware(BaseMonitoringMiddleware, MiddlewareMixin):
     def process_request(self, request):
         REQUESTS_TOTAL.inc()
         method = self._method(request)
-        path = self._get_path(request)
-        REQUESTS_BY_PATH_METHOD.labels(path, method).inc()
+        REQUESTS_BY_METHOD.labels(method).inc()
         content_length = int(request.META.get('CONTENT_LENGTH') or 0)
         REQUESTS_BODY_BYTES.observe(content_length)
         request.prometheus_middleware_event = time()
