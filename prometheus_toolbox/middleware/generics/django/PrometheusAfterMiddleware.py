@@ -80,7 +80,7 @@ class PrometheusAfterMiddleware(BaseMonitoringMiddleware, MiddlewareMixin):
                     path=self._get_path(request),
                     method=request.method)\
                 .observe(time_since(
-                    request.prometheus_after_middleware_event
+                    request.prometheus_middleware_event
                 ))
         else:
             REQUESTS_LATENCY_UNKNOWN.inc()
