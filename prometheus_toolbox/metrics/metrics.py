@@ -38,12 +38,7 @@ RESPONSES_BY_PATH_STATUS = Counter(
     'Count of responses by status.',
     ['path', 'status'])
 
-EXCEPTIONS_BY_PATH = Counter(
-    with_prefix('http_exceptions_total_by_view'),
-    'Count of exceptions by path.',
-    ['path'])
-
-EXCEPTIONS_BY_TYPE = Counter(
-    with_prefix('http_exceptions_total_by_type'),
-    'Count of exceptions by object type.',
-    ['type'])
+EXCEPTIONS_BY_PATH_TYPE = Counter(
+    with_prefix('http_exceptions_by_path_type'),
+    'Count of exceptions by path, type.',
+    ['path', 'type'])

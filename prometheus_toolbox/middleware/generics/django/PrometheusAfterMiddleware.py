@@ -9,8 +9,7 @@ from prometheus_toolbox.metrics import (
     RESPONSES_BODY_BYTES,
     RESPONSES_BY_PATH_STATUS,
     RESPONSES_TOTAL,
-    EXCEPTIONS_BY_PATH,
-    EXCEPTIONS_BY_TYPE
+    EXCEPTIONS_BY_PATH_TYPE
 )
 
 
@@ -72,8 +71,11 @@ class PrometheusAfterMiddleware(BaseMonitoringMiddleware, MiddlewareMixin):
         return response
 
     def process_exception(self, request, exception):
-        EXCEPTIONS_BY_TYPE.labels(type(exception).__name__).inc()
-        EXCEPTIONS_BY_PATH.labels(self._get_path(request)).inc()
+        EXCEPTIONS_BY_PATH_TYPE\
+            .labels(
+                path=self._get_path(request),
+                type=type(exception).__name__
+            ).inc()
         if hasattr(request, 'prometheus_middleware_event'):
             REQUESTS_LATENCY_BY_PATH_METHOD\
                 .labels(

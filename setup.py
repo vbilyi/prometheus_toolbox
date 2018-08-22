@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='Prometheus-Toolbox',
-    version='0.0.2',
+    version='0.0.21',
     url='https://github.com/vbilyi/prometheus_toolbox',
     license='MIT',
     author='Vitaly Bilyi',
