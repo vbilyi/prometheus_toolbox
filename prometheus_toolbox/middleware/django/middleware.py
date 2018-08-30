@@ -6,10 +6,9 @@ from prometheus_toolbox.metrics.measures.counters import (
     REQUESTS_BY_PATH_METHOD,
     REQUESTS_LATENCY_UNKNOWN,
     REQUESTS_TOTAL,
-    RESPONSES_BY_STATUS,
+    RESPONSES_BY_PATH_STATUS,
     RESPONSES_TOTAL,
-    EXCEPTIONS_BY_PATH,
-    EXCEPTIONS_BY_TYPE,
+    EXCEPTIONS_BY_PATH_TYPE,
 )
 from prometheus_toolbox.metrics.measures.histograms import (
     REQUESTS_BODY_BYTES,
@@ -50,31 +49,45 @@ class AfterRequestMiddleware(BaseMetricsMiddleware, MiddlewareMixin):
 
     def process_response(self, request, response):
         RESPONSES_TOTAL.inc()
-        RESPONSES_BY_STATUS.labels(str(response.status_code)).inc()
+        (
+            RESPONSES_BY_PATH_STATUS
+            .labels(
+                path=self._get_path(request),
+                status=str(response.status_code),
+            ).inc()
+        )
         if hasattr(response, 'content'):
             RESPONSES_BODY_BYTES.observe(len(response.content))
         if hasattr(request, 'prometheus_middleware_event'):
-            REQUESTS_LATENCY_BY_PATH_METHOD\
+            (
+                REQUESTS_LATENCY_BY_PATH_METHOD
                 .labels(
-                    path=self._get_path(request),
-                    method=request.method)\
+                    path=request.path,
+                    method=request.method,
+                )
                 .observe(time_since(
                     request.prometheus_middleware_event
                 ))
+            )
         else:
             REQUESTS_LATENCY_UNKNOWN.inc()
         return response
 
     def process_exception(self, request, exception):
-        EXCEPTIONS_BY_TYPE.labels(type(exception).__name__).inc()
-        EXCEPTIONS_BY_PATH.labels(self._get_path(request)).inc()
+        EXCEPTIONS_BY_PATH_TYPE.labels(
+            path=self._get_path(request),
+            type=type(exception).__name__,
+        ).inc()
         if hasattr(request, 'prometheus_middleware_event'):
-            REQUESTS_LATENCY_BY_PATH_METHOD\
+            (
+                REQUESTS_LATENCY_BY_PATH_METHOD
                 .labels(
-                    path=self._get_path(request),
-                    method=request.method)\
+                    path=request.path,
+                    method=request.method,
+                )
                 .observe(time_since(
-                    request.prometheus_after_middleware_event
+                    request.prometheus_middleware_event
                 ))
+            )
         else:
             REQUESTS_LATENCY_UNKNOWN.inc()

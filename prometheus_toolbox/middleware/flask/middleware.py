@@ -5,10 +5,9 @@ from prometheus_toolbox.metrics.measures.counters import (
     REQUESTS_BY_PATH_METHOD,
     REQUESTS_LATENCY_UNKNOWN,
     REQUESTS_TOTAL,
-    RESPONSES_BY_STATUS,
+    RESPONSES_BY_PATH_STATUS,
     RESPONSES_TOTAL,
-    EXCEPTIONS_BY_PATH,
-    EXCEPTIONS_BY_TYPE,
+    EXCEPTIONS_BY_PATH_TYPE,
 )
 from prometheus_toolbox.metrics.measures.histograms import (
     REQUESTS_BODY_BYTES,
@@ -52,17 +51,26 @@ def after_request_middleware(response):
         :return: None
     """
     RESPONSES_TOTAL.inc()
-    RESPONSES_BY_STATUS.labels(str(response.status_code)).inc()
+    (
+        RESPONSES_BY_PATH_STATUS
+        .labels(
+            path=request.path,
+            status=str(response.status_code)
+        ).inc()
+    )
     if hasattr(response, 'content'):
         RESPONSES_BODY_BYTES.observe(len(response.content))
     if hasattr(request, 'prometheus_middleware_event'):
-        REQUESTS_LATENCY_BY_PATH_METHOD\
+        (
+            REQUESTS_LATENCY_BY_PATH_METHOD
             .labels(
                 path=request.path,
-                method=request.method)\
+                method=request.method,
+            )
             .observe(time_since(
                 request.prometheus_middleware_event
             ))
+        )
     else:
         REQUESTS_LATENCY_UNKNOWN.inc()
     return response
@@ -80,17 +88,19 @@ def exception_tracker(e):
     :param e: Exception instance that has been raised
     :return: None
     """
-    EXCEPTIONS_BY_TYPE.labels(type(e).__name__).inc()
-    EXCEPTIONS_BY_PATH.labels(request.path).inc()
+    EXCEPTIONS_BY_PATH_TYPE.labels(
+        path=request.path,
+        type=type(e).__name__,
+    ).inc()
     if hasattr(request, 'prometheus_middleware_event'):
         (
             REQUESTS_LATENCY_BY_PATH_METHOD
             .labels(
                 path=request.path,
-                method=get_method_name(request),
+                method=request.method,
             )
             .observe(time_since(
-                g.prometheus_after_middleware_event
+                g.prometheus_middleware_event
             ))
         )
     else:
