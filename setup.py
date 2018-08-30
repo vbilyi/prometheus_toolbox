@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='Prometheus-Toolbox',
+    name='prometheus_toolbox',
     version='0.0.2',
     url='https://github.com/vbilyi/prometheus_toolbox',
     license='MIT',
@@ -10,13 +10,10 @@ setup(
     maintainer='Vitaly Bilyi',
     maintainer_email='stbarratt@gmail.com',
     description='Prometheus toolbox for python',
-    long_description=__doc__,
     packages=find_packages(),
-    zip_safe=False,
-    platforms='any',
     install_requires=[
         'prometheus-client>=0.3.1',
-        'Django>=1.8'
+        'Django>=1.8',
     ],
     classifiers=[
         'Intended Audience :: Developers',
@@ -37,5 +34,5 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
     ],
-    keywords='prometheus toolbox'
+    keywords='prometheus toolbox',
 )

@@ -1,4 +1,4 @@
-from prometheus_toolbox.metrics.metrics import (
+from .metrics import (
     REQUESTS_BODY_BYTES,
     REQUESTS_BY_PATH_METHOD,
     REQUESTS_LATENCY_BY_PATH_METHOD,
@@ -8,5 +8,5 @@ from prometheus_toolbox.metrics.metrics import (
     RESPONSES_BY_STATUS,
     RESPONSES_TOTAL,
     EXCEPTIONS_BY_PATH,
-    EXCEPTIONS_BY_TYPE
+    EXCEPTIONS_BY_TYPE,
 )

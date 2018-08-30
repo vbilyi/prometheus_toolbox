@@ -1,3 +1,2 @@
-import prometheus_toolbox.middleware
-import prometheus_toolbox.metrics
-
+from prometheus_toolbox import metrics
+from prometheus_toolbox import middleware

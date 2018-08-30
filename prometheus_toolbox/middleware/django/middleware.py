@@ -1,5 +1,4 @@
-from prometheus_toolbox.metrics.utils import time, time_since
-from prometheus_toolbox.middleware.base import BaseMonitoringMiddleware
+# -*- coding: utf-8 -*-
 from prometheus_toolbox.metrics import (
     REQUESTS_BODY_BYTES,
     REQUESTS_BY_PATH_METHOD,
@@ -12,6 +11,8 @@ from prometheus_toolbox.metrics import (
     EXCEPTIONS_BY_PATH,
     EXCEPTIONS_BY_TYPE
 )
+from prometheus_toolbox.metrics.utils import time, time_since
+from .base import BaseMetricsMiddleware
 
 
 import django
@@ -23,7 +24,7 @@ else:
     MiddlewareMixin = object
 
 
-class PrometheusAfterMiddleware(BaseMonitoringMiddleware, MiddlewareMixin):
+class AfterRequestMiddleware(BaseMetricsMiddleware, MiddlewareMixin):
 
     """Monitoring middleware that should run after other middlewares."""
 

@@ -1,8 +1,10 @@
+# -*- coding: utf-8 -*-
 from django.conf.urls import url
-from prometheus_toolbox.middleware.generics.django.exports import export_to_django_view
+
+from .exports import export_to_django_view
 
 
-urlpatterns = [
+metrics_urlpatterns = [
     url(r'^metrics$', export_to_django_view,
         name='prometheus-django-metrics'),
 ]
