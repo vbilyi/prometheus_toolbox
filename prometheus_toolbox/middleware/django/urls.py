@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls import url
 
-from .exports import export_to_django_view
+from .expose import export_to_django_view
 
 
 metrics_urlpatterns = [

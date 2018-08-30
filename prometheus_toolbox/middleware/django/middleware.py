@@ -1,22 +1,24 @@
 # -*- coding: utf-8 -*-
-from prometheus_toolbox.metrics import (
-    REQUESTS_BODY_BYTES,
+import django
+from django.urls import reverse as get_view_path
+
+from prometheus_toolbox.metrics.measures.counters import (
     REQUESTS_BY_PATH_METHOD,
-    REQUESTS_LATENCY_BY_PATH_METHOD,
     REQUESTS_LATENCY_UNKNOWN,
     REQUESTS_TOTAL,
-    RESPONSES_BODY_BYTES,
     RESPONSES_BY_STATUS,
     RESPONSES_TOTAL,
     EXCEPTIONS_BY_PATH,
-    EXCEPTIONS_BY_TYPE
+    EXCEPTIONS_BY_TYPE,
+)
+from prometheus_toolbox.metrics.measures.histograms import (
+    REQUESTS_BODY_BYTES,
+    REQUESTS_LATENCY_BY_PATH_METHOD,
+    RESPONSES_BODY_BYTES,
 )
 from prometheus_toolbox.metrics.utils import time, time_since
 from .base import BaseMetricsMiddleware
-
-
-import django
-from django.urls import reverse as get_view_path
+from ..helpers import get_method_name
 
 if django.VERSION >= (1, 10, 0):
     from django.utils.deprecation import MiddlewareMixin
@@ -28,14 +30,8 @@ class AfterRequestMiddleware(BaseMetricsMiddleware, MiddlewareMixin):
 
     """Monitoring middleware that should run after other middlewares."""
 
-    def _method(self, request):
-        m = request.method
-        if m not in ('GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'TRACE',
-                     'OPTIONS', 'CONNECT', 'PATCH'):
-            return '<invalid method>'
-        return m
-
-    def _get_path(self, request):
+    @staticmethod
+    def _get_path(request):
         path = "<undefined path>"
         if hasattr(request, 'resolver_match'):
             if request.resolver_match is not None:
@@ -45,7 +41,7 @@ class AfterRequestMiddleware(BaseMetricsMiddleware, MiddlewareMixin):
 
     def process_request(self, request):
         REQUESTS_TOTAL.inc()
-        method = self._method(request)
+        method = get_method_name(request)
         path = self._get_path(request)
         REQUESTS_BY_PATH_METHOD.labels(path, method).inc()
         content_length = int(request.META.get('CONTENT_LENGTH') or 0)
