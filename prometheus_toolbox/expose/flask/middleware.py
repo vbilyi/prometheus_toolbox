@@ -33,7 +33,7 @@ def before_request_middleware():
     method = get_method_name(request)
     path = request.path
     REQUESTS_BY_PATH_METHOD.labels(path, method).inc()
-    content_length = int(request.headers.get('CONTENT_LENGTH') or 0)
+    content_length = int(request.headers.get('CONTENT_LENGTH', 0))
     REQUESTS_BODY_BYTES.observe(content_length)
     g.prometheus_middleware_event = time()
 

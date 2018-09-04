@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from prometheus_client import Histogram
 
 from prometheus_toolbox.expose.helpers import get_registry
