@@ -29,6 +29,9 @@ def before_request_middleware():
 
         :return: None
     """
+    if request.path == '/metrics':
+        return
+
     REQUESTS_TOTAL.inc()
     method = get_method_name(request)
     path = request.url
@@ -50,6 +53,9 @@ def after_request_middleware(response):
         :param response: response object
         :return: response
     """
+    if request.path == '/metrics':
+        return
+
     RESPONSES_TOTAL.inc()
     (
         RESPONSES_BY_PATH_STATUS
@@ -88,6 +94,9 @@ def exception_tracker(e):
     :param e: Exception instance that has been raised
     :return: None
     """
+    if request.path == '/metrics':
+        return
+
     EXCEPTIONS_BY_PATH_TYPE.labels(
         path=request.url,
         type=type(e).__name__,
