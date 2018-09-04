@@ -1,22 +1,6 @@
 # -*- coding: utf-8 -*-
 from timeit import default_timer
 
-from .constants import WEB_SERVICE_METRIC_PREFIX
-
-
-def with_prefix(metric_name, prefix):
-    """
-    Add prefix for metric name
-    """
-    return '{}_{}'.format(prefix, metric_name)
-
-
-def with_web_service_prefix(metric_name):
-    """
-    Add web_service prefix for metric name
-    """
-    return with_prefix(metric_name, WEB_SERVICE_METRIC_PREFIX)
-
 
 def powers_of(logbase, count, lower=0, include_zero=True):
     """

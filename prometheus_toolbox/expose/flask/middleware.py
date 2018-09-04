@@ -31,7 +31,7 @@ def before_request_middleware():
     """
     REQUESTS_TOTAL.inc()
     method = get_method_name(request)
-    path = request.path
+    path = request.url
     REQUESTS_BY_PATH_METHOD.labels(path, method).inc()
     content_length = int(request.headers.get('CONTENT_LENGTH') or 0)
     REQUESTS_BODY_BYTES.observe(content_length)
@@ -48,13 +48,13 @@ def after_request_middleware(response):
         app.after_request(after_request_middleware)
 
         :param response: response object
-        :return: None
+        :return: response
     """
     RESPONSES_TOTAL.inc()
     (
         RESPONSES_BY_PATH_STATUS
         .labels(
-            path=request.path,
+            path=request.url,
             status=str(response.status_code)
         ).inc()
     )
@@ -64,7 +64,7 @@ def after_request_middleware(response):
         (
             REQUESTS_LATENCY_BY_PATH_METHOD
             .labels(
-                path=request.path,
+                path=request.url,
                 method=request.method,
             )
             .observe(time_since(
@@ -89,14 +89,14 @@ def exception_tracker(e):
     :return: None
     """
     EXCEPTIONS_BY_PATH_TYPE.labels(
-        path=request.path,
+        path=request.url,
         type=type(e).__name__,
     ).inc()
     if hasattr(request, 'prometheus_middleware_event'):
         (
             REQUESTS_LATENCY_BY_PATH_METHOD
             .labels(
-                path=request.path,
+                path=request.url,
                 method=request.method,
             )
             .observe(time_since(

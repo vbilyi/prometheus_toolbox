@@ -1,8 +1,11 @@
-from setuptools import setup, find_packages
+try:
+    from setuptools import setup, find_packages
+except ImportError:
+    from distutils.core import setup, find_packages
 
 setup(
-    name='Prometheus-Toolbox',
-    version='0.0.21',
+    name='prometheus_toolbox',
+    version='0.0.22',
     url='https://github.com/vbilyi/prometheus_toolbox',
     license='MIT',
     author='Vitaly Bilyi',
@@ -13,7 +16,6 @@ setup(
     packages=find_packages(),
     install_requires=[
         'prometheus-client>=0.3.1',
-        'Django>=1.8',
     ],
     classifiers=[
         'Intended Audience :: Developers',

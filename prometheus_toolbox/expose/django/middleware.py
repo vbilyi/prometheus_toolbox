@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import django
-from django.urls import reverse as get_view_path
 
 from prometheus_toolbox.metrics.measures.counters import (
     REQUESTS_BY_PATH_METHOD,
@@ -29,30 +28,29 @@ class AfterRequestMiddleware(BaseMetricsMiddleware, MiddlewareMixin):
 
     """Monitoring middleware that should run after other middlewares."""
 
-    @staticmethod
-    def _get_path(request):
-        path = "<undefined path>"
-        if hasattr(request, 'resolver_match'):
-            if request.resolver_match is not None:
-                if request.resolver_match.view_name is not None:
-                    path = get_view_path(request.resolver_match.view_name)
-        return path
-
     def process_request(self, request):
+
+        if request.path == '/metrics':
+            return
+
         REQUESTS_TOTAL.inc()
         method = get_method_name(request)
-        path = self._get_path(request)
+        path = request.build_absolute_uri()
         REQUESTS_BY_PATH_METHOD.labels(path, method).inc()
         content_length = int(request.META.get('CONTENT_LENGTH') or 0)
         REQUESTS_BODY_BYTES.observe(content_length)
         request.prometheus_middleware_event = time()
 
     def process_response(self, request, response):
+
+        if request.path == '/metrics':
+            return
+
         RESPONSES_TOTAL.inc()
         (
             RESPONSES_BY_PATH_STATUS
             .labels(
-                path=self._get_path(request),
+                path=request.build_absolute_uri(),
                 status=str(response.status_code),
             ).inc()
         )
@@ -62,7 +60,7 @@ class AfterRequestMiddleware(BaseMetricsMiddleware, MiddlewareMixin):
             (
                 REQUESTS_LATENCY_BY_PATH_METHOD
                 .labels(
-                    path=request.path,
+                    path=request.build_absolute_uri(),
                     method=request.method,
                 )
                 .observe(time_since(
@@ -74,15 +72,19 @@ class AfterRequestMiddleware(BaseMetricsMiddleware, MiddlewareMixin):
         return response
 
     def process_exception(self, request, exception):
+
+        if request.path == '/metrics':
+            return
+
         EXCEPTIONS_BY_PATH_TYPE.labels(
-            path=self._get_path(request),
+            path=request.build_absolute_uri(),
             type=type(exception).__name__,
         ).inc()
         if hasattr(request, 'prometheus_middleware_event'):
             (
                 REQUESTS_LATENCY_BY_PATH_METHOD
                 .labels(
-                    path=request.path,
+                    path=request.build_absolute_uri(),
                     method=request.method,
                 )
                 .observe(time_since(
