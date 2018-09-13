@@ -21,10 +21,10 @@ def add_metrics_endpoint(app):
     :param app: app instance
     :return: app instance with metrics endpoint
     """
-    app_dispatch = DispatcherMiddleware(app, {
+    app.wsgi_app = DispatcherMiddleware(app, {
         '/metrics': create_wsgi_app(),
     })
-    return app_dispatch
+    return app
 
 
 def setup_default_metrics(app):
