@@ -86,7 +86,7 @@ def exception_tracker(e):
     app.register_error_handler(Exception, exception_tracker)
 
     :param e: Exception instance that has been raised
-    :return: None
+    :return: e
     """
     EXCEPTIONS_BY_PATH_TYPE.labels(
         path=request.path,
@@ -105,3 +105,4 @@ def exception_tracker(e):
         )
     else:
         REQUESTS_LATENCY_UNKNOWN.inc()
+    return e
