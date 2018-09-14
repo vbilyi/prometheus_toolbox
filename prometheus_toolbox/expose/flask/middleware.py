@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from flask import request, g
+from http import HTTPStatus
+from flask import request, g, jsonify
 
 from prometheus_toolbox.metrics.measures.counters import (
     REQUESTS_BY_PATH_METHOD,
@@ -105,4 +106,6 @@ def exception_tracker(e):
         )
     else:
         REQUESTS_LATENCY_UNKNOWN.inc()
-    return e
+
+    error_code = e.code if hasattr(e, 'code') else HTTPStatus.INTERNAL_SERVER_ERROR
+    return jsonify(error=f"{type(e).__name__}: {str(e)}"), error_code
