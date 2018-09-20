@@ -1,2 +1,2 @@
-from .urls import metrics_urlpatterns
+from .urls import urlpatterns
 from .middleware import AfterRequestMiddleware
